@@ -1,0 +1,11 @@
+/home/jose/Desktop/Codind_2.0/OperativeSystems1_Project2_202206560/weather-api/target/debug/deps/libppv_lite86-254d99a3d4017e7a.rmeta: /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/lib.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/soft.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/types.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/mod.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/sse2.rs
+
+/home/jose/Desktop/Codind_2.0/OperativeSystems1_Project2_202206560/weather-api/target/debug/deps/libppv_lite86-254d99a3d4017e7a.rlib: /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/lib.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/soft.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/types.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/mod.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/sse2.rs
+
+/home/jose/Desktop/Codind_2.0/OperativeSystems1_Project2_202206560/weather-api/target/debug/deps/ppv_lite86-254d99a3d4017e7a.d: /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/lib.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/soft.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/types.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/mod.rs /home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/sse2.rs
+
+/home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/lib.rs:
+/home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/soft.rs:
+/home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/types.rs:
+/home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/mod.rs:
+/home/jose/.cargo/registry/src/index.crates.io-6f17d22bba15001f/ppv-lite86-0.2.21/src/x86_64/sse2.rs:
