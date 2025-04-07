@@ -1,34 +1,34 @@
-use actix_web::{post, web, App, HttpServer, Responder, HttpResponse};
-use serde::{Deserialize, Serialize};
-use std::fmt::Debug;
+mod grpc_client;
+mod models;
 
-#[derive(Debug, Serialize, Deserialize)]
-struct WeatherTweet {
-    description: String,
-    country: String,
-    weather: String,
-}
+use actix_web::{post, web, App, HttpResponse, HttpServer};
+use models::WeatherTweet;
 
 #[post("/input")]
-async fn process_tweet(tweet: web::Json<WeatherTweet>) -> impl Responder {
-    println!("Received tweet: {:?}", tweet);
-    
-    HttpResponse::Ok().json(serde_json::json!({
-        "status": "received",
-        "country": tweet.country,
-        "weather": tweet.weather
-    }))
+async fn handle_weather_tweet(tweet: web::Json<WeatherTweet>) -> HttpResponse {
+    println!("Rust received: {:?}", tweet);
+
+    // Convert to gRPC message
+    let grpc_tweet = grpc_client::weather::WeatherTweet {
+        description: tweet.description.clone(),
+        country: tweet.country.clone(),
+        weather: tweet.weather.clone(),
+    };
+
+    // Call Go gRPC server
+    match grpc_client::send_to_go_grpc(grpc_tweet).await {
+        Ok(_) => HttpResponse::Ok().json(tweet),
+        Err(e) => {
+            eprintln!("gRPC error: {:?}", e);
+            HttpResponse::InternalServerError().finish()
+        }
+    }
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    println!("Starting Rust weather API on http://localhost:8080");
-    
-    HttpServer::new(|| {
-        App::new()
-            .service(process_tweet)
-    })
-    .bind("0.0.0.0:8080")?
-    .run()
-    .await
+    HttpServer::new(|| App::new().service(handle_weather_tweet))
+        .bind("0.0.0.0:8080")?
+        .run()
+        .await
 }
