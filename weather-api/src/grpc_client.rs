@@ -7,7 +7,7 @@ pub mod weather {
 pub async fn send_to_go_grpc(
     tweet: weather::WeatherTweet,
 ) -> Result<(), tonic::Status> {
-    let channel = Channel::from_static("http://[::1]:50051")
+    let channel = Channel::from_static("http://go-api:50051")
         .connect()
         .await
         .map_err(|e| tonic::Status::new(tonic::Code::Internal, e.to_string()))?;

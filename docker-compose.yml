@@ -1,0 +1,14 @@
+services:
+  go-api:
+    image: go-api
+    build: ./go-api
+    ports:
+      - "8081:8081"
+      - "50051:50051"
+  rust-api:
+    image: weather-api
+    build: ./weather-api
+    ports:
+      - "8080:8080"
+    depends_on:
+      - go-api
