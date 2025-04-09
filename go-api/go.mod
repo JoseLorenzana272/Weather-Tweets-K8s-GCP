@@ -3,7 +3,9 @@ module go-api
 go 1.24.1
 
 require (
+	github.com/confluentinc/confluent-kafka-go/v2 v2.8.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
+	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect

@@ -1,11 +1,16 @@
 FROM golang:1.24 AS builder
 WORKDIR /app
 COPY . .
-RUN go mod download
-RUN CGO_ENABLED=0 GOOS=linux go build -o /server ./cmd/server
+RUN apt-get update && apt-get install -y \
+    librdkafka-dev \
+    && rm -rf /var/lib/apt/lists/*
+RUN CGO_ENABLED=1 GOOS=linux go build -o server ./cmd/server
 
-FROM alpine:latest
+FROM debian:bookworm-slim
 WORKDIR /app
-COPY --from=builder /server .
+RUN apt-get update && apt-get install -y \
+    librdkafka1 \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=builder /app/server .
 EXPOSE 8081 50051
 CMD ["./server"]

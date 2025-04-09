@@ -5,6 +5,9 @@ services:
     ports:
       - "8081:8081"
       - "50051:50051"
+    depends_on:
+      - kafka
+      - rabbitmq
   rust-api:
     image: weather-api
     build: ./weather-api
@@ -12,3 +15,48 @@ services:
       - "8080:8080"
     depends_on:
       - go-api
+
+  kafka:
+    image: confluentinc/cp-kafka:7.7.0
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+      KAFKA_BROKER_ID: 0
+      KAFKA_LISTENERS: "PLAINTEXT://:9092"
+      KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://kafka:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "PLAINTEXT:PLAINTEXT"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:9092", "--list"]
+      interval: 5s
+      timeout: 10s
+      retries: 10
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: zookeeper:3.8
+    ports:
+      - "2181:2181"
+    volumes:
+      - zookeeper-data:/data
+
+  rabbitmq:
+    image: rabbitmq:management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  kcat:
+    image: confluentinc/cp-kcat:7.7.0
+    entrypoint: ["sleep", "infinity"]
+    depends_on:
+      - kafka
+
+volumes:
+  kafka-data:
+  zookeeper-data:
