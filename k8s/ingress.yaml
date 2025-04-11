@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: weather-ingress
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: 34.55.195.162.nip.io
+    http:
+      paths:
+      - path: /input
+        pathType: Prefix
+        backend:
+          service:
+            name: rust-api
+            port:
+              number: 80
+      - path: /health
+        pathType: Prefix
+        backend:
+          service:
+            name: rust-api
+            port:
+              number: 80

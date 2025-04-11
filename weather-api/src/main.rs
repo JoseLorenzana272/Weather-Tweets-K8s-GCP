@@ -1,8 +1,13 @@
 mod grpc_client;
 mod models;
 
-use actix_web::{post, web, App, HttpResponse, HttpServer};
+use actix_web::{get, post, web, App, HttpResponse, HttpServer};
 use models::WeatherTweet;
+
+#[get("/health")]
+async fn health_check() -> HttpResponse {
+    HttpResponse::Ok().body("OK")
+}
 
 #[post("/input")]
 async fn handle_weather_tweet(tweet: web::Json<WeatherTweet>) -> HttpResponse {
@@ -27,8 +32,12 @@ async fn handle_weather_tweet(tweet: web::Json<WeatherTweet>) -> HttpResponse {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    HttpServer::new(|| App::new().service(handle_weather_tweet))
-        .bind("0.0.0.0:8080")?
-        .run()
-        .await
+    HttpServer::new(|| {
+        App::new()
+            .service(health_check)
+            .service(handle_weather_tweet)
+    })
+    .bind("0.0.0.0:8080")?
+    .run()
+    .await
 }

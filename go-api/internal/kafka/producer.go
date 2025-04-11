@@ -2,13 +2,18 @@ package kafka
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 )
 
 func Publish(topic string, message []byte) error {
+	bootstrapServers := os.Getenv("KAFKA_BOOTSTRAP_SERVERS")
+	if bootstrapServers == "" {
+		bootstrapServers = "kafka:9092"
+	}
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
-		"bootstrap.servers": "kafka:9092",
+		"bootstrap.servers": bootstrapServers,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create producer: %w", err)

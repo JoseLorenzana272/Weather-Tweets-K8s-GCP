@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  creationTimestamp: "2025-04-10T19:23:44Z"
+  labels:
+    app: rust-api
+  name: rust-api
+  namespace: default
+  resourceVersion: "200779"
+  uid: b2de1c54-2c50-451c-b2bb-31e624e1a361
+spec:
+  clusterIP: 34.118.236.3
+  clusterIPs:
+  - 34.118.236.3
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: rust-api
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

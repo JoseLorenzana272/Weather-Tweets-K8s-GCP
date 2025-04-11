@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    cloud.google.com/neg: '{"ingress":true}'
+  creationTimestamp: "2025-04-10T19:26:50Z"
+  labels:
+    app: go-api
+  name: go-api
+  namespace: default
+  resourceVersion: "202898"
+  uid: f51a223e-6da4-45a1-a685-47314517705a
+spec:
+  clusterIP: 34.118.229.24
+  clusterIPs:
+  - 34.118.229.24
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+  - name: http
+    port: 8081
+    targetPort: 8081
+  selector:
+    app: go-api
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}
