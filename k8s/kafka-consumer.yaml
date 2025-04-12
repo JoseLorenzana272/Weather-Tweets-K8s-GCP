@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-consumer
+  namespace: default
+  labels:
+    app: kafka-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-consumer
+  template:
+    metadata:
+      labels:
+        app: kafka-consumer
+    spec:
+      containers:
+      - name: kafka-consumer
+        image: 34.118.202.127.nip.io/project2/kafka-consumer:latest
+        imagePullPolicy: Always
+        env:
+        - name: KAFKA_BOOTSTRAP_SERVERS
+          value: "weather-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        - name: REDIS_ADDR
+          value: "redis-master.redis.svc.cluster.local:6379"
+        - name: REDIS_PASSWORD
+          value: "redis-pass"
