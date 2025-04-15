@@ -25,4 +25,4 @@ spec:
         - name: REDIS_ADDR
           value: "redis-master.redis.svc.cluster.local:6379"
         - name: REDIS_PASSWORD
-          value: "redis-pass"
+          value: "my-redis-pass"

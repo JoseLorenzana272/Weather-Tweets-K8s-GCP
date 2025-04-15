@@ -1,15 +1,24 @@
 package rabbitmq
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"os"
+	"time"
 
-	amqp "github.com/rabbitmq/amqp091-go"
+	"github.com/rabbitmq/amqp091-go"
 )
 
-func Publish(queue string, message []byte) error {
-	conn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
+func Publish(queueName string, message []byte) error {
+	rabbitMQAddr := os.Getenv("RABBITMQ_ADDR")
+	if rabbitMQAddr == "" {
+		rabbitMQAddr = "amqp://guest:guest@rabbitmq.rabbitmq.svc.cluster.local:5672/"
+	}
+
+	conn, err := amqp091.Dial(rabbitMQAddr)
 	if err != nil {
-		return fmt.Errorf("failed to connect: %w", err)
+		return fmt.Errorf("failed to connect to RabbitMQ: %w", err)
 	}
 	defer conn.Close()
 
@@ -20,26 +29,35 @@ func Publish(queue string, message []byte) error {
 	defer ch.Close()
 
 	_, err = ch.QueueDeclare(
-		queue, // name
-		true,  // durable
-		false, // autoDelete
-		false, // exclusive
-		false, // noWait
-		nil,   // args
+		queueName, // name
+		true,      // durable
+		false,     // autoDelete
+		false,     // exclusive
+		false,     // noWait
+		nil,       // args
 	)
 	if err != nil {
 		return fmt.Errorf("failed to declare queue: %w", err)
 	}
 
-	err = ch.Publish(
-		"",    // exchange
-		queue, // routing key
-		false, // mandatory
-		false, // immediate
-		amqp.Publishing{
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	err = ch.PublishWithContext(
+		ctx,
+		"",        // exchange
+		queueName, // routing key
+		false,     // mandatory
+		false,     // immediate
+		amqp091.Publishing{
 			ContentType: "application/json",
 			Body:        message,
 		},
 	)
-	return err
+	if err != nil {
+		return fmt.Errorf("failed to publish: %w", err)
+	}
+
+	log.Printf("Published to RabbitMQ: %s", message)
+	return nil
 }

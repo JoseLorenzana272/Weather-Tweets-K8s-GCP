@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-consumer
+  labels:
+    app: rabbitmq-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-consumer
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-consumer
+    spec:
+      containers:
+      - name: rabbit-consumer
+        image: 34.118.202.127.nip.io/project2/rabbitmq-consumer:latest
+        imagePullPolicy: Always
+        env:
+        - name: RABBITMQ_ADDR
+          value: "amqp://guest:guest@rabbitmq.rabbitmq.svc.cluster.local:5672/"
+        - name: VALKEY_ADDR
+          value: "valkey-primary.default.svc.cluster.local:6379"
+        - name: VALKEY_PASSWORD
+          value: "valkey-pass"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-consumer
+spec:
+  selector:
+    app: rabbitmq-consumer
+  ports:
+  - port: 80
+    targetPort: 8080

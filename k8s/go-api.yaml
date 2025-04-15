@@ -24,6 +24,8 @@ spec:
         env:
         - name: KAFKA_BOOTSTRAP_SERVERS
           value: "weather-kafka-kafka-bootstrap.kafka.svc.cluster.local:9092"
+        - name: RABBITMQ_ADDR
+          value: "amqp://guest:guest@rabbitmq.rabbitmq.svc.cluster.local:5672/"
         readinessProbe:
           tcpSocket:
             port: 50051
