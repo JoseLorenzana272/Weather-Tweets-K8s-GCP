@@ -1,0 +1,37 @@
+replicaCount: 1
+admin:
+  existingSecret: ""
+  userKey: admin-user
+  passwordKey: admin-password
+persistence:
+  enabled: true
+  size: 3Gi
+  type: pvc
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard
+service:
+  type: ClusterIP
+  port: 80
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+    - name: Redis
+      type: redis-datasource
+      url: redis://redis-master.redis.svc.cluster.local:6379
+      access: proxy
+      jsonData:
+        poolSize: 5
+        timeout: 10
+      secureJsonData:
+        password: "my-redis-pass"
+    - name: Valkey
+      type: redis-datasource
+      url: redis://valkey-primary.default.svc.cluster.local:6379
+      access: proxy
+      jsonData:
+        poolSize: 5
+        timeout: 10
+      secureJsonData:
+        password: "valkey-pass"

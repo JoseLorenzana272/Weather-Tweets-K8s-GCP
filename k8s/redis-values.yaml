@@ -1,0 +1,19 @@
+architecture: replication
+auth:
+  enabled: true
+  password: my-redis-pass
+master:
+  persistence:
+    enabled: true
+    storageClass: standard-rwo
+    size: 8Gi
+replica:
+  replicaCount: 3
+  persistence:
+    enabled: true
+    storageClass: standard-rwo
+    size: 8Gi
+service:
+  type: ClusterIP
+  port: 6379
+  name: redis

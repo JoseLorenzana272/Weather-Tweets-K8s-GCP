@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -10,6 +11,12 @@ import (
 	"github.com/confluentinc/confluent-kafka-go/v2/kafka"
 	"github.com/redis/go-redis/v9"
 )
+
+type WeatherMessage struct {
+	Description string `json:"description"`
+	Country     string `json:"country"`
+	Weather     string `json:"weather"`
+}
 
 func Consume() {
 	bootstrapServers := os.Getenv("KAFKA_BOOTSTRAP_SERVERS")
@@ -24,7 +31,7 @@ func Consume() {
 
 	redisPass := os.Getenv("REDIS_PASSWORD")
 	if redisPass == "" {
-		redisPass = "redis-pass"
+		redisPass = "my-redis-pass"
 	}
 
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
@@ -57,15 +64,36 @@ func Consume() {
 	for {
 		msg, err := c.ReadMessage(-1)
 		if err == nil {
+			var weather WeatherMessage
+			if err := json.Unmarshal(msg.Value, &weather); err != nil {
+				log.Printf("Failed to unmarshal message: %v", err)
+				continue
+			}
+
 			message := string(msg.Value)
 			log.Printf("Received message: %s", message)
+
+			// Store individual message
 			key := fmt.Sprintf("weather:%d", time.Now().UnixNano())
-			err = rdb.Set(ctx, key, message, 0).Err()
-			if err != nil {
+			if err := rdb.Set(ctx, key, message, 0).Err(); err != nil {
 				log.Printf("Failed to store in Redis: %v", err)
 			} else {
 				log.Printf("Stored in Redis with key: %s", key)
 			}
+
+			// Update country counter
+			countryKey := "country:counts"
+			if err := rdb.HIncrBy(ctx, countryKey, weather.Country, 1).Err(); err != nil {
+				log.Printf("Failed to update country counter: %v", err)
+			}
+
+			// Update total messages
+			totalKey := "messages:total"
+			if err := rdb.Incr(ctx, totalKey).Err(); err != nil {
+				log.Printf("Failed to update total messages: %v", err)
+			}
+
+			log.Printf("Updated country: %s, total messages: %s", weather.Country, totalKey)
 		} else {
 			log.Printf("Consumer error: %v (%v)", err, msg)
 		}
